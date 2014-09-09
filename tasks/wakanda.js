@@ -26,14 +26,14 @@ module.exports = function (grunt) {
       case 'darwin':
         return '/Applications/Wakanda Server.app/Contents/MacOS/Wakanda Server';
       default:
-        return 'wakanda'
+        return 'wakanda';
     }
   }
 
   function escapeShellArg(arg) {
     ['\\', '$', '`'].forEach(function (char) {
       arg = arg.split(char).join('\\' + char);
-    })
+    });
     return arg;
   }
 
