@@ -1,4 +1,5 @@
 # wakanda
+[![NPM version](https://badge.fury.io/js/grunt-wakanda.svg)](http://badge.fury.io/js/grunt-wakanda)
 
 > Start Wakanda Server
 
@@ -35,6 +36,8 @@ grunt.initConfig({
     options: {
       bin: 'path to the Wakanda server', 
       solution: 'path of a wakanda solution', 
+      keepalive: true, 
+      leavealive: false, 
       open: true
     }
   }
@@ -56,6 +59,18 @@ Default value: `''`
 
 A string value that is used to specify the Wakanda Solution to open.
 If not specified, the default solution embeded in the server is used
+
+#### options.keepalive
+Type: `Boolean`
+Default value: false
+
+A boolean value that is used to block task execution once the server is started (and the browser open is 'open' is true)
+
+#### options.leavealive
+Type: `Boolean`
+Default value: false
+
+A boolean value that is used to maintain the server started once grunt exit.
 
 #### options.open
 Type: `Boolean`
@@ -82,7 +97,8 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+
+0.1.0: Start the Wakanda server and Open Admin page in the browser
 
 ## License
 Copyright (c) 2014 Alexandre Morgaut. Licensed under the MIT license.
