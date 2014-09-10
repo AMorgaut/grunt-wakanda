@@ -133,8 +133,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-[v0.1.3](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.3): Add the `wait` option
-[v0.1.2](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.2): Start the Wakanda Server and Open Admin page in the browser
+* [v0.1.3](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.3): Add the `wait` option
+* [v0.1.2](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.2): Start the Wakanda Server and Open Admin page in the browser
 
 ## References:
 
