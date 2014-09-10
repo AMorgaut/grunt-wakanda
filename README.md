@@ -25,7 +25,7 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-wakanda');
 ```
 
-Or using [load-grunt-tasks](https://github.com/sindresorhus/load-grunt-tasks) it could automatically done by:
+Or using [load-grunt-tasks](https://github.com/sindresorhus/load-grunt-tasks) it could be automatically done by:
 
 ```js
 require('load-grunt-tasks')(grunt);
@@ -95,7 +95,7 @@ A boolean value that is used to open the Web Administration page in the browser.
 
 #### Default Options
 In this example, the default options are used to find and start Wakanda Server.
-The Administration panel is opened so you can browse your computer files to load a solution.
+[The Wakanda Web Administration panel](http://doc.wakanda.org/Wakanda-Server-Reference-Guide/Administrating-Wakanda-Server/Wakanda-Server-Administration.300-957822.en.html) is opened so you can browse your computer files to load a solution.
 
 ```js
 grunt.initConfig({
