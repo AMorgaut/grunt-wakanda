@@ -37,8 +37,6 @@ module.exports = function (grunt) {
     return arg;
   }
 
-  grunt.loadNpmTasks('grunt-debug-task');
-
   grunt.registerTask('wakanda', 'Start Wakanda Server', function () {
 
     function exit() {

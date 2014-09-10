@@ -112,7 +112,7 @@ grunt.initConfig({
 ## Todo
 
 ### options
-All wakanda server command line should be managed including
+All wakanda server command line possibilities should be managed including
 
 * `debugger` mode (default set to `remote` to use Chrome Web Inspector)
 * custom http and https `port numbers`
