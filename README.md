@@ -22,7 +22,13 @@ npm install grunt-wakanda --save-dev
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('wakanda');
+grunt.loadNpmTasks('grunt-wakanda');
+```
+
+Or using [load-grunt-tasks](https://github.com/sindresorhus/load-grunt-tasks) it could automatically done by:
+
+```js
+require('load-grunt-tasks')(grunt);
 ```
 
 ## The "wakanda" task
@@ -60,11 +66,17 @@ Default value: `''`
 A string value that is used to specify the Wakanda Solution to open.
 If not specified, the default solution embeded in the server is used
 
+#### options.wait
+Type: `Boolean`
+Default value: false
+
+A boolean value that is used to block task execution until the server is started. This option isn't necessary if `open` is activated (as open is already waiting for the server to be ready).
+
 #### options.keepalive
 Type: `Boolean`
 Default value: false
 
-A boolean value that is used to block task execution once the server is started (and the browser open is 'open' is true)
+A boolean value that is used to block task execution once the server is started (and once the browser open is 'open' is true)
 
 #### options.leavealive
 Type: `Boolean`
@@ -101,6 +113,7 @@ grunt.initConfig({
 
 ### options
 All wakanda server command line should be managed including
+
 * `debugger` mode (default set to `remote` to use Chrome Web Inspector)
 * custom http and https `port numbers`
 * custom `admin password`
@@ -111,15 +124,31 @@ All wakanda server command line should be managed including
 * set custom `system-workers` settings
 * disable the `discovery` service
 
-## watch / reload
-For dev mode the wakanda task should watch when the Wakanda Model is modified and reload Model related pages in the browser
+
+### watch / reload
+For dev mode a task should watch when the Wakanda Model is modified and reload Model related pages in the browser. I may then write a dedicated `wakanda-reload` task allowing to reload either a model or a whole solution.
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
 
-0.1.2: Start the Wakanda server and Open Admin page in the browser
+[v0.1.3](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.3): Add the `wait` option
+[v0.1.2](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.2): Start the Wakanda Server and Open Admin page in the browser
 
-## License
-Copyright (c) 2014 Alexandre Morgaut. Licensed under the MIT license.
+## References:
+
+* [Wakanda Web Application Server Overview](http://www.wakanda.org/web-application-server)
+* [Administrating-Wakanda-Server](http://doc.wakanda.org/Command-Line-Access/Administrating-Wakanda-Server-Unix.300-583228.en.html)
+* [Evaluating a JS script](http://doc.wakanda.org/Command-Line-Access/Evaluating-a-JS-script.300-958090.en.html)
+
+
+## License (MIT License)
+
+Copyright (c) 2014 Alexandre Morgaut. 
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

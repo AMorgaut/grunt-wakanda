@@ -50,7 +50,8 @@ module.exports = function (grunt) {
       }
     }
 
-    function open() {
+    function ready() {
+      grunt.log.writeln('Wakanda Server is ready');
       if (options.open) {
         grunt.log.writeln('Open URL:', host);
         require('opn')('http://' + host);
@@ -58,7 +59,7 @@ module.exports = function (grunt) {
       exit();
     }
 
-    function openWhenReady() {
+    function waitUntilReady() {
       http.request({
 
         method: 'HEAD',
@@ -66,7 +67,7 @@ module.exports = function (grunt) {
         port: options.port,
         path: '/rest/'
       
-      }, open).on('error', function (err) {
+      }, ready).on('error', function (err) {
         checkServerTries += 1;
         if (checkServerTries > 5) {
           exit();
@@ -81,6 +82,7 @@ module.exports = function (grunt) {
       bin: getDefaultBin(),
       solution: '',
       debug: 'remote',
+      wait: false,
       open: false,
       keepalive: false,
       leavealive: false,
@@ -131,7 +133,9 @@ module.exports = function (grunt) {
       done();
     });
 
-    var interval = setInterval(openWhenReady, 1000);
+    if (options.wait || options.open) {
+      var interval = setInterval(waitUntilReady, 1000);
+    }
 
   }); // end registerTask
 
