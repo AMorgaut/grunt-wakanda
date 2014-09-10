@@ -1,4 +1,4 @@
-# wakanda
+# grunt-wakanda
 [![NPM version](https://badge.fury.io/js/grunt-wakanda.svg)](http://badge.fury.io/js/grunt-wakanda)
 
 > Start Wakanda Server
@@ -82,23 +82,44 @@ A boolean value that is used to open the Web Administration page in the browser.
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to start Wakanda Server
+In this example, the default options are used to find and start Wakanda Server.
+The Administration panel is opened so you can browse your computer files to load a solution.
 
 ```js
 grunt.initConfig({
   wakanda: {
-    options: {}
+    options: { 
+      keepalive: true, 
+      leavealive: false, 
+      open: true
+    }
   }
 });
 ```
 
+## Todo
+
+### options
+All wakanda server command line should be managed including
+* `debugger` mode (default set to `remote` to use Chrome Web Inspector)
+* custom http and https `port numbers`
+* custom `admin password`
+* activate `syslog` mode
+* activate the `verbose` mode (requires Wakanda 9)
+* get the server `version` 
+* get the running server `job-id` 
+* set custom `system-workers` settings
+* disable the `discovery` service
+
+## watch / reload
+For dev mode the wakanda task should watch when the Wakanda Model is modified and reload Model related pages in the browser
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
 
-0.1.0: Start the Wakanda server and Open Admin page in the browser
+0.1.2: Start the Wakanda server and Open Admin page in the browser
 
 ## License
 Copyright (c) 2014 Alexandre Morgaut. Licensed under the MIT license.
