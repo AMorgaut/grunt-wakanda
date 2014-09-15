@@ -1,5 +1,8 @@
 # grunt-wakanda
 [![NPM version](https://badge.fury.io/js/grunt-wakanda.svg)](http://badge.fury.io/js/grunt-wakanda)
+[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](#license)
+
+*Wakanda® and 4D® are registered trademarks of 4D SAS in France and/or other countries. All other names mentioned may be trademarks or registered trademarks of their respective owners.*
 
 > Start Wakanda Server
 
@@ -7,7 +10,7 @@ May be considered as a replacement for [grunt-contrib-connect](https://github.co
 
 Uses the [Wakanda Server](http://wakanda.org) installed on the system.
 
-*Doesn't have a `middleware` option as grunt-contrib-connect does.*
+*Doesn't have (yet?) a `middleware` option as grunt-contrib-connect does.*
 
 
 ## Getting Started
@@ -33,67 +36,10 @@ require('load-grunt-tasks')(grunt);
 
 ## The "wakanda" task
 
-### Overview
-In your project's Gruntfile, add a section named `wakanda` to the data object passed into `grunt.initConfig()`.
-
-```js
-grunt.initConfig({
-  wakanda: {
-    options: {
-      bin: 'path to the Wakanda server', 
-      solution: 'path of a wakanda solution', 
-      keepalive: true, 
-      leavealive: false, 
-      open: true
-    }
-  }
-});
-```
-
-### Options
-
-#### options.bin
-Type: `String`
-Default value: `''`
-
-A string value that is used to find the Wakanda Server build to run.
-If not specified, the default os specific path is used
-
-#### options.solution
-Type: `String`
-Default value: `''`
-
-A string value that is used to specify the Wakanda Solution to open.
-If not specified, the default solution embeded in the server is used
-
-#### options.wait
-Type: `Boolean`
-Default value: false
-
-A boolean value that is used to block task execution until the server is started. This option isn't necessary if `open` is activated (as open is already waiting for the server to be ready).
-
-#### options.keepalive
-Type: `Boolean`
-Default value: false
-
-A boolean value that is used to block task execution once the server is started (and once the browser open is 'open' is true)
-
-#### options.leavealive
-Type: `Boolean`
-Default value: false
-
-A boolean value that is used to maintain the server started once grunt exit.
-
-#### options.open
-Type: `Boolean`
-Default value: false
-
-A boolean value that is used to open the Web Administration page in the browser.
-
-
 ### Usage Examples
 
-#### Default Options
+In your project's Gruntfile, add a section named `wakanda` to the data object passed into `grunt.initConfig()`.
+
 In this example, the default options are used to find and start Wakanda Server.
 [The Wakanda Web Administration panel](http://doc.wakanda.org/Wakanda-Server-Reference-Guide/Administrating-Wakanda-Server/Wakanda-Server-Administration.300-957822.en.html) is opened so you can browse your computer files to load a solution.
 
@@ -109,30 +55,186 @@ grunt.initConfig({
 });
 ```
 
+### Options
+
+#### Administration options
+
+##### options.solution
+Type: `String`
+Default value: `''`
+
+A string value that is used to specify the Wakanda Solution to open.
+If not specified, the default solution embeded in the server is used
+Should not be used at the same time than `option.script`.
+
+##### options.script
+Type: `String`
+Default value: `''`
+
+A string value that is used to specify a JavaScript file to run on Wakanda Server.
+Should not be used at the same time than `option.solution`.
+
+##### options.port
+Type: `Number`
+Default value: `8080`
+
+A number value that is used to specify Wakanda Web Administration panel HTTP port number.
+Note it is only accessible through HTTP from the local machine. From outside, the HTTPS protocol should be used.
+
+##### options.ssl
+Type: `Number`
+Default value: `4433`
+
+A number value that is used to specify Wakanda Web Administration panel HTTPS port number.
+
+##### options.login
+Type: `String`
+Default value: `undefined`
+
+The admin login. If specified, a login panel will first need to be filled before accessing to the Web Administration.
+
+##### options.password
+Type: `String`
+Default value: `undefined`
+
+The admin password. If specified, a login panel will first need to be filled before accessing to the Web Administration.
+
+
+#### Discovery options
+
+##### options.discovery
+Type: `Boolean`
+Default value: `true`
+
+Specify if the *Bonjour* discovery service should be activated or not.
+
+
+#### Debugger options
+
+##### options.debugger
+Type: `String`
+Default value: `remote`
+
+Specify which wakanda debugger and debugger protocol to activate
+
+* 'remote': The embedded Web Inspector via the webkit debugger protocol 
+* 'wakanda': The Wakanda Studio debugger via the Crossfire debugger protocol
+* 'none': No debugger is activated
+
+
+#### Logging facility options
+
+##### options.syslog
+Type: `Boolean`
+Default value: `false`
+
+Forward Wakanda Server's log messages to the Syslog daemon
+
+##### options.netdump
+Type: `Boolean`
+Default value: `false`
+
+Net dump
+
+#### Utils
+
+##### options.wversion
+Type: `Boolean`
+Default value: `false`
+
+Returns the Wakanda Server version instead of starting it
+
+##### options.whelp
+Type: `Boolean`
+Default value: `false`
+
+Returns the Wakanda Server native command line help. Mostly used for the development of this task itself in combination of the official documentation
+
+
+#### Task options
+
+##### options.bin
+Type: `String`
+Default value: `''`
+
+Specify the Wakanda Server build to run.
+If not specified, the default os specific path is used
+
+##### options.host
+Type: `String`
+Default value: `"127.0.0.1"`
+
+The host that is meant to be used by Wakanda Server.
+
+##### options.wait
+Type: `Boolean`
+Default value: false
+
+Used to block task execution until the server is started. 
+This option isn't necessary if `open` is activated (as open is already waiting for the server to be ready).
+
+##### options.keepalive
+Type: `Boolean`
+Default value: false
+
+Used to block task execution once the server is started (and once the browser open is 'open' is true)
+
+##### options.leavealive
+Type: `Boolean`
+Default value: false
+
+Used to maintain the server started once grunt exit.
+
+##### options.open
+Type: `Boolean`
+Default value: false
+
+Used to open the Web Administration page in the browser.
+
+
+#### Task events
+
+##### wakandaReady
+
+Emited on `grunt.event` once the Wakanda HTTP server is ready
+
+##### wakandaExit
+
+Emited on `grunt.event` when the Wakanda child process is killed
+
+##### wakandaExitRequest
+
+Listened on `grunt.event` to kill the Wakanda child process if still alive
+
+
+
 ## Todo
 
-### options
-All wakanda server command line possibilities should be managed including
+### Unit Tests fix
 
-* `debugger` mode (default set to `remote` to use Chrome Web Inspector)
-* custom http and https `port numbers`
-* custom `admin password`
-* activate `syslog` mode
-* activate the `verbose` mode (requires Wakanda 9)
-* get the server `version` 
-* get the running server `job-id` 
-* set custom `system-workers` settings
-* disable the `discovery` service
+Need to find out how to make the unit tests work properly. Currently trying to stop the server from an emitted grunt event so it can be restarted with different options from other tests. Any help welcome ;-) 
+
+### IP address / host
+
+The task could fix the `host` option default value from the Wakanda server output
 
 
 ### watch / reload
-For dev mode a task should watch when the Wakanda Model is modified and reload Model related pages in the browser. I may then write a dedicated `wakanda-reload` task allowing to reload either a model or a whole solution.
+
+For dev mode we should be able to have the solution or the Model reload when they are modified.
+
+So Either:
+
+* Write a dedicated "friend" `wakanda-reload` task 
+* Handle events such as `wakandaReloadModelRequest` and `wakandaReloadSolutionRequest`
+
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
 
+* [v0.1.4](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.4): Add support to most the command line options + experimental events
 * [v0.1.3](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.3): Add the `wait` option
 * [v0.1.2](https://github.com/AMorgaut/grunt-wakanda/releases/tag/v0.1.2): Start the Wakanda Server and Open Admin page in the browser
 
@@ -143,7 +245,9 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 * [Evaluating a JS script](http://doc.wakanda.org/Command-Line-Access/Evaluating-a-JS-script.300-958090.en.html)
 
 
-## License (MIT License)
+## License
+
+*The MIT License*
 
 Copyright (c) 2014 Alexandre Morgaut. 
 

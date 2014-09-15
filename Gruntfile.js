@@ -8,6 +8,19 @@
 
 'use strict';
 
+var os = require('os');
+
+function getDefaultBin() {
+  switch (os.platform()) {
+    case 'win32':
+      return 'c:\\wakanda versions\\wak2\\wakanda server\\wakanda server.exe';
+    case 'darwin':
+      return '/Applications/Wakanda Server.app/Contents/MacOS/Wakanda Server';
+    default:
+      return 'wakanda';
+  }
+}
+
 module.exports = function (grunt) {
   // load all npm grunt tasks
   require('load-grunt-tasks')(grunt);
@@ -33,10 +46,73 @@ module.exports = function (grunt) {
 
     // Configuration to be run (and then tested).
     wakanda: {
-      options: {
-        keepalive: this.option('keepalive'),
-        open: this.option('open')
-      }
+      default_options: {
+        options: {} 
+      },/*
+      options_custom_stdio: {
+        options: {
+          stdio: undefined
+        } 
+      },
+      options_custom_bin: {
+        options: {
+          bin: getDefaultBin(),
+          stdio: undefined
+        } 
+      },
+      options_custom_login: {
+        options: {
+          login: 'foo',
+          password: 'bar',
+          stdio: undefined
+        } 
+      },*/
+      options_custom_port: {
+        options: {
+          port: 8090,
+          stdio: undefined
+        } 
+      }/*,
+      options_custom_ssl: {
+        options: {
+          port: 4242,
+          stdio: undefined
+        } 
+      },
+      options_without_discovery: {
+        options: {
+          discovery: false,
+          stdio: undefined
+        } 
+      },
+      options_no_debug: {
+        options: {
+          debug: 'none',
+          stdio: undefined
+        } 
+      },
+      options_syslog: {
+        options: {
+          syslog: true,
+          stdio: undefined
+        } 
+      },
+      options_netdump: {
+        options: {
+          netdump: true,
+          stdio: undefined
+        }
+      },
+      options_whelp: {
+        options: {
+          whelp: true
+        } 
+      },
+      options_wversion: {
+        options: {
+          wversion: true
+        } 
+      }*/
     },
 
     // Unit tests.

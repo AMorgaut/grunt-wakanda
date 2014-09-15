@@ -14,6 +14,7 @@ var spawn = require('child_process').spawn;
 var http = require('http');
 var open = require('opn');
 
+
 module.exports = function (grunt) {
 
   // Please see the Grunt documentation for more information regarding task
@@ -31,13 +32,14 @@ module.exports = function (grunt) {
   }
 
   function escapeShellArg(arg) {
+    arg = String(arg);
     ['\\', '$', '`'].forEach(function (char) {
       arg = arg.split(char).join('\\' + char);
     });
     return arg;
   }
 
-  grunt.registerTask('wakanda', 'Start Wakanda Server', function () {
+  grunt.registerMultiTask('wakanda', 'Start Wakanda Server', function () {
 
     function exit() {
       if (interval) {
@@ -49,10 +51,11 @@ module.exports = function (grunt) {
     }
 
     function ready() {
+      grunt.event.emit('wakandaReady');
       grunt.log.writeln('Wakanda Server is ready');
       if (options.open) {
-        grunt.log.writeln('Open URL:', host);
-        require('opn')('http://' + host);
+        grunt.log.writeln('Open URL:', url);
+        open(url);
       }
       exit();
     }
@@ -66,49 +69,110 @@ module.exports = function (grunt) {
         path: '/rest/'
       
       }, ready).on('error', function (err) {
-        checkServerTries += 1;
-        if (checkServerTries > 5) {
+        grunt.log.writeln('Ping', maxServerPing);
+
+        if (maxServerPing < 0) {
           exit();
         }
+        maxServerPing -= 1;
+
       }).end();
+    }
+
+    function pushArg(key, value, valueRequired) {
+      if (value === true) {
+        // do nothing
+      } else if (value) {
+        key += '=' + escapeShellArg(value);
+      } else if (valueRequired) {
+        return;
+      }
+      args.push(key);
     }
     
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      port: 8080,
-      hostname: '127.0.0.1',
       bin: getDefaultBin(),
+      // Solution
       solution: '',
+      script: '',
+      // Administration options
+      login: undefined,
+      password: undefined,
+      port: 8080,
+      ssl: 4433,
+      // Discovery options
+      discovery: true,
+      // Debugger options
       debug: 'remote',
+      // Jobs
+      jobId: undefined,
+      // System Workers
+      systemWorkers: undefined,
+      // Logging facility
+      syslog: false,
+      netdump: false,
+      verbose: false, // planned for Wakanda 9
+      // Help
+      wversion: false,
+      whelp: false,
+      // Task options
+      host: '127.0.0.1',
       wait: false,
       open: false,
       keepalive: false,
       leavealive: false,
-      stdio: 'inherit',
-      callback: function (error, result, code) {
-        grunt.log.writeln(error, result, code);
-      }
+      stdio: 'inherit'
     });
 
+    //grunt.log.writeln('Options', options);
+
     var cmd = path.normalize(options.bin);
-    var host = options.hostname + ':' + options.port;
+    var solution = path.normalize(options.solution || options.script);
+    var url = 'http://' + options.host + ':' + options.port;
+    var systemWorkers = options.systemWorkers && path.normalize(options.systemWorkers);
     var args = [];
-    var checkServerTries = 0;
+    var maxServerPing = 5;
     
-    // Solution path
-    if (options.solution) {
-      args.push(options.solution);
+    // Solution or file path
+    if (solution !== '.') {
+      pushArg(solution);
     }
 
-    // Debug Mode
-    if (['remote', 'wakanda', 'none'].indexOf(options.debug) === -1) {
-        options.debug = 'remote';
+    // Administration options
+    pushArg('--admin-login', options.login, true);
+    pushArg('--admin-password', options.password, true);
+    pushArg('--admin-port', options.port);
+    pushArg('--admin-ssl-port', options.ssl);
+    // Service discovery options
+    pushArg('--without-discovery', !options.discovery, true);
+    // Debugger settings
+    pushArg('--debugger', options.debug);
+    if (options.debug === 'none') {
+      pushArg('--debug-off', true);
     }
-    //args.push('-g:' + options.debug);
+    // Jobs
+    pushArg('--job-id', options.jobId, true);
+    // System Workers
+    pushArg('--system-workers', systemWorkers, true);
+    // Logging facility
+    pushArg('--syslog', options.syslog, true);
+    pushArg('--netdump', options.netdump, true);
+    pushArg('--verbose', options.verbose, true); // planned for Wakanda 9
+    // Help
+    pushArg('--version', options.wversion, true);
+    pushArg('--help', options.whelp, true);
+
+    /*process.stdout.on('data', function(buf) {
+        console.log("data:", String(buf));
+    });*/
 
     // Launch the server
-    grunt.log.writeln('Starting Wakanda!');
+    if (!options.wversion && !options.whelp) {
+      grunt.log.writeln('Starting Wakanda!');
+    }
     var done = this.async();
+    grunt.log.writeln('Spawn Wakanda', args);
     var wakanda = spawn(cmd, args, {stdio: options.stdio, cwd: '.'});
 
     // Ask to quit Wakanda when grunt is done if 'leavealive' is false
@@ -122,12 +186,21 @@ module.exports = function (grunt) {
       });
     }
     
+    grunt.event.on('wakandaExitRequest', function () {
+      if (!wakanda || !wakanda.pid) {
+        return;
+      }
+      wakanda.kill();
+    });
 
     wakanda.on('exit', function () {
-      grunt.log.writeln('Wakanda Server is Stopping');
+      if (!options.wversion && !options.whelp) {
+        grunt.log.writeln('Wakanda Server is Stopping');
+      }
       if (interval) {
         clearInterval(interval);
       }
+      grunt.event.emit('wakandaExit');
       done();
     });
 
