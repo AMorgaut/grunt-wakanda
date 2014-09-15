@@ -192,7 +192,7 @@ Default value: false
 Used to open the Web Administration page in the browser.
 
 
-### Task events
+### Events
 
 #### wakandaReady
 
