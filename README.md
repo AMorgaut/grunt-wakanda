@@ -136,7 +136,7 @@ Default value: `false`
 
 Net dump
 
-#### Utils
+#### Utils options
 
 ##### options.wversion
 Type: `Boolean`
@@ -192,17 +192,17 @@ Default value: false
 Used to open the Web Administration page in the browser.
 
 
-#### Task events
+### Task events
 
-##### wakandaReady
+#### wakandaReady
 
 Emited on `grunt.event` once the Wakanda HTTP server is ready
 
-##### wakandaExit
+#### wakandaExit
 
 Emited on `grunt.event` when the Wakanda child process is killed
 
-##### wakandaExitRequest
+#### wakandaExitRequest
 
 Listened on `grunt.event` to kill the Wakanda child process if still alive
 
